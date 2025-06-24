@@ -21,4 +21,14 @@ export const calculatePercentage = (value: number, total: number): number => {
 // 숫자 포맷팅
 export const formatNumber = (num: number): string => {
   return num.toLocaleString('ko-KR');
-}; 
+};
+
+// 짧은 랜덤 ID 생성 (6~8자리)
+export function generateShortId(length = 8) {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+} 

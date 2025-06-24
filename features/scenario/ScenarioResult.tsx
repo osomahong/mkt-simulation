@@ -30,7 +30,11 @@ interface Statistics {
   total: number;
 }
 
-const ScenarioResult = () => {
+interface ScenarioResultProps {
+  sharedResult?: any;
+}
+
+const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
   const { answers, questions, reset, salaryInfo } = useScenarioStore(state => ({
     answers: state.answers,
     questions: state.questions,
@@ -39,16 +43,33 @@ const ScenarioResult = () => {
   }));
   const router = useRouter();
 
+  // sharedResult가 있으면 해당 데이터로 대체
+  const resultAnswers = sharedResult ? sharedResult.answers : answers;
+  const resultPersona = sharedResult ? sharedResult.persona : undefined;
+  const resultSalaryInfo = sharedResult ? sharedResult.salaryInfo : salaryInfo;
+
   const { persona, tagScores } = useMemo(() => {
-    const scores: { [tag: string]: number } = {};
-    answers.forEach(answer => {
-      answer.tags.forEach(tag => {
-        scores[tag] = (scores[tag] || 0) + 1;
+    if (sharedResult && resultPersona) {
+      // 공유 결과 데이터 사용
+      const scores: { [tag: string]: number } = {};
+      resultAnswers.forEach((answer: any) => {
+        answer.tags.forEach((tag: string) => {
+          scores[tag] = (scores[tag] || 0) + 1;
+        });
       });
-    });
-    const personaResult = analyzeAnswers(answers);
-    return { persona: personaResult, tagScores: scores };
-  }, [answers]);
+      return { persona: resultPersona, tagScores: scores };
+    } else {
+      // 기존 로직
+      const scores: { [tag: string]: number } = {};
+      answers.forEach(answer => {
+        answer.tags.forEach(tag => {
+          scores[tag] = (scores[tag] || 0) + 1;
+        });
+      });
+      const personaResult = analyzeAnswers(answers);
+      return { persona: personaResult, tagScores: scores };
+    }
+  }, [sharedResult, resultPersona, resultAnswers, answers]);
 
   // 통계 상태
   const [statistics, setStatistics] = useState<Statistics | null>(null);
@@ -66,6 +87,16 @@ const ScenarioResult = () => {
           setMyRank(rank);
         }
       });
+  }, [persona.title]);
+
+  // 결과페이지 진입 시 view_result 이벤트 트리거
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.dataLayer) {
+      window.dataLayer.push({
+        event: 'view_result',
+        title: persona.title
+      });
+    }
   }, [persona.title]);
 
   // 결과 저장 (최초 1회만)
@@ -119,13 +150,13 @@ const ScenarioResult = () => {
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-slate-700 mb-2">당신의 강점</h3>
               <ul className="list-disc list-inside space-y-1 text-sm sm:text-base text-slate-500">
-                {persona.strengths.map((s) => <li key={s}>{s}</li>)}
+                {(persona.strengths as any[]).map((s: any) => <li key={s}>{s}</li>)}
               </ul>
             </div>
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-slate-700 mb-2">성장을 위한 제언</h3>
               <ul className="list-disc list-inside space-y-1 text-sm sm:text-base text-slate-500">
-                {persona.weaknesses.map((w) => <li key={w}>{w}</li>)}
+                {(persona.weaknesses as any[]).map((w: any) => <li key={w}>{w}</li>)}
               </ul>
             </div>
           </div>
