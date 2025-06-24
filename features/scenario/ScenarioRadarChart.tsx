@@ -30,9 +30,9 @@ interface RadarChartProps {
 const ScenarioRadarChart = ({ data }: RadarChartProps) => {
   // 최대 점수(문항 수) 계산
   const maxScore = Math.max(...Object.values(data), 1);
-  // 퍼센트 변환
+  // 퍼센트 변환 (최대 95%로 scale 조정)
   const percentData = Object.fromEntries(
-    Object.entries(data).map(([k, v]) => [k, Math.round((v / maxScore) * 100)])
+    Object.entries(data).map(([k, v]) => [k, Math.round((v / maxScore) * 95)])
   );
 
   const chartData = {
@@ -41,7 +41,7 @@ const ScenarioRadarChart = ({ data }: RadarChartProps) => {
       {
         label: '나의 마케팅 성향',
         data: Object.values(percentData),
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        backgroundColor: 'rgba(54, 162, 235, 0.18)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 2,
         pointBackgroundColor: 'rgba(54, 162, 235, 1)',
@@ -62,7 +62,7 @@ const ScenarioRadarChart = ({ data }: RadarChartProps) => {
           color: 'rgba(0, 0, 0, 0.1)',
         },
         suggestedMin: 0,
-        suggestedMax: 100, // 퍼센트 기준
+        suggestedMax: 120, // 퍼센트 기준(여유있게)
         grid: {
           color: 'rgba(0, 0, 0, 0.1)',
         },

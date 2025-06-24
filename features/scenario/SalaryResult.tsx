@@ -207,11 +207,44 @@ const SalaryResult = () => {
     router.push('/scenarios');
   };
 
+  // 카카오톡 공유 함수 (간단 버전)
+  const handleKakaoShare = () => {
+    if (!window.Kakao || !window.Kakao.Share) {
+      alert('카카오 SDK 로딩 중입니다. 잠시 후 다시 시도해 주세요.');
+      return;
+    }
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init('f265d81144e358dad13c422075f42c62');
+    }
+    const shareUrl = window.location.href;
+    window.Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '마케터 연봉 비교 통계',
+        description: '더 많은 사람들이 참여할수록 연봉 통계가 더 정확해져요!\n나와 비슷한 마케터들의 연봉을 확인해보세요.',
+        imageUrl: `${window.location.origin}/og-images/main.png`,
+        link: {
+          webUrl: shareUrl,
+          mobileWebUrl: shareUrl,
+        },
+      },
+      buttons: [
+        {
+          title: '연봉 통계 보러가기',
+          link: {
+            webUrl: shareUrl,
+            mobileWebUrl: shareUrl,
+          },
+        },
+      ],
+    });
+  };
+
   if (!salaryInfo?.salary) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 비교 결과</h1>
+          <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 통계 결과</h1>
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
             <p className="text-slate-600 mb-4">
               연봉 정보를 입력하지 않으셨기 때문에 비교 통계를 확인할 수 없습니다.
@@ -235,7 +268,7 @@ const SalaryResult = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 비교 결과</h1>
+          <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 통계 결과</h1>
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
             <div className="animate-pulse">
               <div className="h-4 bg-slate-200 rounded mb-4"></div>
@@ -252,12 +285,20 @@ const SalaryResult = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 비교 결과</h1>
+          <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 통계 결과</h1>
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
-            <p className="text-red-600 mb-4">{error}</p>
-            <p className="text-sm text-slate-500">
-              더 많은 사용자가 진단을 완료하면 정확한 통계를 확인할 수 있습니다.
+            <p className="text-red-600 mb-4">아직 데이터가 부족해요! 🐣</p>
+            <p className="text-sm text-slate-500 mb-4">
+              더 많은 사람들이 참여하면, 연봉별 통계를 볼 수 있을 거에요!
             </p>
+            <button
+              onClick={handleKakaoShare}
+              className="w-full py-3 rounded-lg text-lg font-bold flex items-center justify-center gap-2 mb-2"
+              style={{ backgroundColor: 'rgb(255, 244, 19)' }}
+            >
+              <img src="/og-images/KakaoTalk_logo.png" alt="카카오톡" style={{ width: 24, height: 24 }} />
+              카카오톡으로 공유하기
+            </button>
           </div>
           <button
             onClick={handleReset}
@@ -273,7 +314,7 @@ const SalaryResult = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
       <div className="w-full max-w-md text-center">
-        <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 비교 결과</h1>
+        <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 통계 결과</h1>
         
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
           <h2 className="text-lg font-semibold text-slate-800 mb-4">

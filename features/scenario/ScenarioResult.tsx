@@ -307,7 +307,7 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
       <div className="w-full max-w-4xl bg-white p-6 sm:p-8 rounded-2xl shadow-lg text-center">
         <p className="text-base sm:text-lg font-medium text-blue-600">
-          당신의 마케터 유형 분석 결과
+          당신의 마케팅 성향 결과
         </p>
         {marketerType && (
           <div className="text-lg font-semibold text-slate-700 mb-1">{marketerType} 마케터</div>
@@ -367,7 +367,7 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
         {statistics && (
           <div className="mt-12 text-left">
             <h2 className="text-xl sm:text-2xl font-bold mb-6 text-slate-700 text-center">
-              내 답변과 다른 사람들의 비교
+              내 답변과 다른 사람들의 선택
             </h2>
             <div className="space-y-4">
               {restoredAnswers.map((answer, index) => {
@@ -405,9 +405,9 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
                       </div>
                     </div>
                     <div className="mt-2 text-xs sm:text-sm text-slate-500">
-                      {isPopular && "🎯 대부분의 마케터와 비슷한 생각을 가지고 있어요!"}
-                      {isUnique && "💎 독특한 관점을 가지고 있어요!"}
-                      {!isPopular && !isUnique && "🤔 중간 정도의 선택이에요."}
+                      {isPopular && "🎯 많은 마케터들이 이 선택을 했어요!"}
+                      {isUnique && "💎 나만의 독특한 마케팅 스타일이에요!"}
+                      {!isPopular && !isUnique && "🤔 다양한 스타일이 공존하고 있어요."}
                     </div>
                   </div>
                 );
@@ -434,10 +434,11 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
               </button>
               <button
                 onClick={handleKakaoShare}
-                className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 rounded-lg text-lg border border-yellow-300 flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-lg text-lg font-bold flex items-center justify-center gap-2"
+                style={{ backgroundColor: 'rgb(255, 244, 19)' }}
               >
                 <img src="/og-images/KakaoTalk_logo.png" alt="카카오톡" style={{ width: 24, height: 24 }} />
-                결과 보러가기
+                카톡 공유하기
               </button>
             </>
           )}
