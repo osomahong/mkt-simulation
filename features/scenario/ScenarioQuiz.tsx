@@ -103,13 +103,13 @@ const ScenarioQuiz = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
       <div className="w-full max-w-2xl">
         <div className="text-center mb-8">
-          <p className="text-base sm:text-lg font-semibold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent flex items-center justify-center gap-2">
+          <p className="text-base sm:text-lg font-semibold text-slate-800 flex items-center justify-center gap-2">
             📝 Question {currentQuestionIndex + 1} / {questions.length}
           </p>
         </div>
 
         <div className="bg-white/80 backdrop-blur-sm p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-200/50 hover:shadow-2xl transition-all duration-300">
-          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent break-words">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-6 text-center break-words">
             {highlightTermsBold(currentQuestion.question, termsInCurrent)}
           </h2>
           <div className="flex justify-center gap-2 mb-8">
@@ -148,7 +148,7 @@ const ScenarioQuiz = () => {
         {/* 등장 용어 해설 */}
         {glossaryInCurrent.length > 0 && (
           <div className="mt-8 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 border border-yellow-200/50 rounded-2xl p-4 shadow-lg backdrop-blur-sm">
-            <div className="font-bold bg-gradient-to-r from-yellow-700 to-amber-700 bg-clip-text text-transparent mb-2 flex items-center gap-2">
+            <div className="font-bold text-yellow-700 mb-2 flex items-center gap-2">
               💡 이 문제에 등장한 용어 해설
             </div>
             <ul className="text-sm text-slate-700 space-y-2">

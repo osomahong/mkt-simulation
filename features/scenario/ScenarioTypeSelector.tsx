@@ -36,7 +36,7 @@ const ScenarioTypeSelector = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
       <div className="w-full max-w-2xl text-center">
-        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-2 flex items-center justify-center gap-3">
+        <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-2 flex items-center justify-center gap-3">
           🎨 마케팅 성향 테스트
         </h1>
         <p className="text-base sm:text-lg text-slate-600 mb-8 sm:mb-10 leading-relaxed">
@@ -51,7 +51,7 @@ const ScenarioTypeSelector = () => {
             >
               <span className="text-3xl sm:text-4xl">{emoji}</span>
               <div className="flex flex-col text-left">
-                <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent">{name}</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-slate-800">{name}</h2>
                 <p className="text-sm sm:text-base text-slate-600 mt-1 leading-relaxed">{description}</p>
               </div>
             </button>

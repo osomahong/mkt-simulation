@@ -271,7 +271,7 @@ const SalaryResult = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4">💼 연봉 통계 결과</h1>
+          <h1 className="text-2xl font-bold text-slate-800 mb-4">💼 연봉 통계 결과</h1>
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 mb-6 hover:shadow-2xl transition-all duration-300">
             <p className="text-slate-600 mb-4">
               연봉 정보를 입력하지 않으셨기 때문에 비교 통계를 확인할 수 없습니다.
@@ -295,7 +295,7 @@ const SalaryResult = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4">⏳ 연봉 통계 결과</h1>
+          <h1 className="text-2xl font-bold text-slate-800 mb-4">⏳ 연봉 통계 결과</h1>
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6">
             <div className="animate-pulse">
               <div className="h-4 bg-slate-200 rounded mb-4"></div>
@@ -312,7 +312,7 @@ const SalaryResult = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4">📊 연봉 통계 결과</h1>
+          <h1 className="text-2xl font-bold text-slate-800 mb-4">📊 연봉 통계 결과</h1>
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 mb-6 hover:shadow-2xl transition-all duration-300">
             <p className="text-red-600 mb-4">아직 데이터가 부족해요! 🐣</p>
             <p className="text-sm text-slate-500 mb-4">
@@ -341,7 +341,7 @@ const SalaryResult = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
       <div className="w-full max-w-md text-center">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4">📈 연봉 통계 결과</h1>
+        <h1 className="text-2xl font-bold text-slate-800 mb-4">📈 연봉 통계 결과</h1>
         
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 mb-6 hover:shadow-2xl transition-all duration-300">
           <h2 className="text-lg font-semibold text-slate-800 mb-4">
@@ -359,7 +359,7 @@ const SalaryResult = () => {
               <p className="text-sm text-blue-700 mb-1 flex items-center gap-1">
                 📊 나와 비슷한 선택을 한 사용자의 평균 연봉
               </p>
-              <p className="text-2xl font-bold bg-gradient-to-r from-blue-800 to-indigo-800 bg-clip-text text-transparent">
+              <p className="text-2xl font-bold text-blue-800">
                 {stats?.averageSalary.toLocaleString()}만원
               </p>
               <p className="text-xs text-blue-600 mt-1">
@@ -372,7 +372,7 @@ const SalaryResult = () => {
               <p className="text-sm text-green-700 mb-1 flex items-center gap-1">
                 💰 내 연봉
               </p>
-              <p className="text-xl font-bold bg-gradient-to-r from-green-800 to-emerald-800 bg-clip-text text-transparent">
+              <p className="text-xl font-bold text-green-800">
                 {salaryInfo.salary?.toLocaleString()}만원
               </p>
               <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
@@ -392,7 +392,7 @@ const SalaryResult = () => {
         {/* 문항별 평균 연봉 카드 */}
         {perQuestionSalaries.length > 0 && (
           <div className="mt-10">
-            <h3 className="text-lg font-bold bg-gradient-to-r from-slate-700 to-slate-600 bg-clip-text text-transparent mb-4 flex items-center justify-center gap-2">
+            <h3 className="text-lg font-bold text-slate-700 mb-4 flex items-center justify-center gap-2">
               📋 문항별 나와 비슷한 사용자의 평균 연봉
             </h3>
             <div className="space-y-4">

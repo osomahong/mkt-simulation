@@ -4,7 +4,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 flex items-center justify-center">
       <div className="max-w-4xl mx-auto px-6 py-12 text-center">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-6 flex items-center justify-center gap-3">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-800 mb-6 flex items-center justify-center gap-3">
           🎯 마케터 역량 진단
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -14,7 +14,7 @@ export default function HomePage() {
         
         <div className="max-w-2xl mx-auto mb-12">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-8 hover:shadow-2xl transition-all duration-300">
-            <h2 className="text-2xl font-semibold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4 flex items-center justify-center gap-2">
+            <h2 className="text-2xl font-semibold text-slate-800 mb-4 flex items-center justify-center gap-2">
               📋 시나리오 진단
             </h2>
             <p className="text-slate-600 mb-6 leading-relaxed">
@@ -30,7 +30,7 @@ export default function HomePage() {
         </div>
         
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-8 hover:shadow-2xl transition-all duration-300">
-          <h3 className="text-xl font-semibold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-6 flex items-center justify-center gap-2">
+          <h3 className="text-xl font-semibold text-slate-800 mb-6 flex items-center justify-center gap-2">
             ✨ 진단 특징
           </h3>
           <div className="grid md:grid-cols-3 gap-6 text-sm">

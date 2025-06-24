@@ -8,6 +8,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "마케터 역량 진단",
   description: "당신의 마케터 유형을 진단하고 강점을 발견하세요",
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
   openGraph: {
     title: "마케터 역량 진단",
     description: "당신의 마케터 유형을 진단하고 강점을 발견하세요",

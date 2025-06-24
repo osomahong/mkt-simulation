@@ -339,7 +339,7 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
         {marketerType && (
           <div className="text-lg font-semibold text-slate-700 mb-1">{marketerType} 마케터</div>
         )}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-2 bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent flex items-center justify-center gap-2">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-800 mt-2 flex items-center justify-center gap-2">
           <span>{getTitleEmoji(persona.title)}</span> {persona.title}
         </h1>
 

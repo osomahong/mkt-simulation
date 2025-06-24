@@ -40,7 +40,7 @@ export default function ScenarioDetailPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
       <main className="max-w-xl mx-auto py-8">
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6">
-          <h1 className="text-2xl font-bold mb-4 bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2">
             📋 {scenario.title}
           </h1>
           <p className="mb-4 text-slate-600 leading-relaxed">{scenario.description}</p>

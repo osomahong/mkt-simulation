@@ -21,7 +21,7 @@ const SalaryInput = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-2 flex items-center justify-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2 flex items-center justify-center gap-2">
             📝 추가 정보 입력
           </h1>
           <p className="text-base text-slate-600 mb-6 leading-relaxed">
@@ -29,7 +29,7 @@ const SalaryInput = () => {
           </p>
           
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 mb-6 hover:shadow-2xl transition-all duration-300">
-            <h2 className="text-lg font-semibold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4 flex items-center justify-center gap-2">
+            <h2 className="text-lg font-semibold text-slate-800 mb-4 flex items-center justify-center gap-2">
               ✏️ 경력과 연봉을 수정하시겠어요?
             </h2>
             <p className="text-sm text-slate-500 mb-6 leading-relaxed">
@@ -128,7 +128,7 @@ const SalaryInput = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
       <div className="w-full max-w-md text-center">
-        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-2 flex items-center justify-center gap-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2 flex items-center justify-center gap-2">
           📝 추가 정보 입력
         </h1>
         <p className="text-base text-slate-600 mb-6 leading-relaxed">
@@ -136,7 +136,7 @@ const SalaryInput = () => {
         </p>
         
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 mb-6 hover:shadow-2xl transition-all duration-300">
-          <h2 className="text-lg font-semibold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4 flex items-center justify-center gap-2">
+          <h2 className="text-lg font-semibold text-slate-800 mb-4 flex items-center justify-center gap-2">
             💼 당신의 연차와 연봉을 입력해주세요
           </h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
