@@ -35,11 +35,12 @@ interface ScenarioResultProps {
 }
 
 const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
-  const { answers, questions, reset, salaryInfo } = useScenarioStore(state => ({
+  const { answers, questions, reset, salaryInfo, marketerType } = useScenarioStore(state => ({
     answers: state.answers,
     questions: state.questions,
     reset: state.reset,
     salaryInfo: state.salaryInfo,
+    marketerType: state.marketerType,
   }));
   const router = useRouter();
 
@@ -83,8 +84,8 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
         // 내 유형의 순위 계산
         if (data.personaCount && persona.title) {
           const sorted = Object.entries(data.personaCount).sort((a, b) => b[1] - a[1]);
-          const rank = sorted.findIndex(([title]) => title === persona.title) + 1;
-          setMyRank(rank);
+          const rank = sorted.findIndex(([title]) => title === persona.title);
+          setMyRank(rank === -1 ? null : rank + 1);
         }
       });
   }, [persona.title]);
@@ -129,14 +130,31 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
     return { percentage, totalAnswers, myChoiceCount };
   };
 
+  // 이모지 매핑 함수 추가
+  const getTitleEmoji = (title: string) => {
+    if (!title) return '';
+    if (title.includes('성과')) return '🏆';
+    if (title.includes('데이터')) return '📊';
+    if (title.includes('고객 경험')) return '🤝';
+    if (title.includes('트렌드')) return '🔥';
+    if (title.includes('브랜드')) return '💎';
+    if (title.includes('혁신') || title.includes('실험')) return '🧪';
+    if (title.includes('단기')) return '⚡';
+    if (title.includes('공감')) return '😊';
+    return '✨';
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
       <div className="w-full max-w-4xl bg-white p-6 sm:p-8 rounded-2xl shadow-lg text-center">
         <p className="text-base sm:text-lg font-medium text-blue-600">
           당신의 마케터 유형 분석 결과
         </p>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-2 text-slate-800">
-          🏆 {persona.title}
+        {marketerType && (
+          <div className="text-lg font-semibold text-slate-700 mb-1">{marketerType} 마케터</div>
+        )}
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-2 text-slate-800 flex items-center justify-center gap-2">
+          <span>{getTitleEmoji(persona.title)}</span> {persona.title}
         </h1>
 
         <div className="mt-8 sm:mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center text-left">
@@ -172,7 +190,14 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
                   가장 많은 유형: {Object.entries(statistics.personaCount).sort((a, b) => b[1] - a[1])[0][0]}
                 </div>
                 <div className="text-sm sm:text-base text-slate-600 mt-1">
-                  내 유형은 전체 중 <b>{myRank}</b>번째로 많아요.
+                  {myRank !== null ? (
+                    <>내 유형은 전체 중 <b>{myRank}</b>번째로 많아요.</>
+                  ) : (
+                    <span>
+                      내 유형과 같은 사람은 아직 없어요.<br />
+                      <span className="text-lg font-bold text-pink-500">당신이 처음입니다! 🥳🎉</span>
+                    </span>
+                  )}
                 </div>
               </div>
             )}
@@ -200,7 +225,7 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
                     <div className="text-sm sm:text-base font-semibold text-slate-700 mb-2">
                       Q{index + 1}. {question.question}
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between flex-wrap">
                       <div className="text-sm sm:text-base text-slate-600">
                         내 선택: <span className="font-medium">
                           {(() => {
@@ -210,11 +235,14 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
                           })()}
                         </span>
                       </div>
-                      <div className={`text-sm sm:text-base font-bold ${
-                        isPopular ? 'text-green-600' : 
-                        isUnique ? 'text-purple-600' : 'text-blue-600'
-                      }`}>
-                        {comparison.percentage}%가 같은 선택
+                      <div className="flex flex-col items-start sm:items-end min-w-[60px]">
+                        <span className={`text-base font-bold ${
+                          isPopular ? 'text-green-600' : 
+                          isUnique ? 'text-purple-600' : 'text-blue-600'
+                        }`}>
+                          {comparison.percentage}%
+                        </span>
+                        <span className="text-xs text-slate-500">100명 중 {Math.round(comparison.percentage)}명이 같은 대답</span>
                       </div>
                     </div>
                     <div className="mt-2 text-xs sm:text-sm text-slate-500">
