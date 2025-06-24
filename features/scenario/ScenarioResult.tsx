@@ -256,6 +256,20 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
     if (!window.Kakao.isInitialized()) {
       window.Kakao.init('f265d81144e358dad13c422075f42c62');
     }
+    // 공유 링크 복사와 동일하게 code 파라미터가 붙은 결과페이지 링크 생성
+    const idxArr = restoredAnswers.map((ans, i) => {
+      const q = loadedQuestions[i];
+      if (!q) return -1;
+      const idx = q.choices.findIndex((c) => JSON.stringify(c.tags) === JSON.stringify(ans.tags));
+      return idx;
+    });
+    const idArr = loadedQuestions.map(q => q.id);
+    if (idxArr.some((v) => v < 0)) {
+      alert('공유할 수 없는 답변이 있습니다.');
+      return;
+    }
+    const codeStr = encodeShareCode(idxArr, idArr);
+    const shareUrl = `${window.location.origin}/scenarios/result?code=${codeStr}`;
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
@@ -263,16 +277,16 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
         description: `10문항으로 알아보는 나의 마케터 유형과 강점!\n강점: ${(persona.strengths || []).join(', ')}`,
         imageUrl: `${window.location.origin}/og-images/result.png`,
         link: {
-          webUrl: window.location.href,
-          mobileWebUrl: window.location.href,
+          webUrl: shareUrl,
+          mobileWebUrl: shareUrl,
         },
       },
       buttons: [
         {
           title: '결과 보러가기',
           link: {
-            webUrl: window.location.href,
-            mobileWebUrl: window.location.href,
+            webUrl: shareUrl,
+            mobileWebUrl: shareUrl,
           },
         },
       ],
