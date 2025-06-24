@@ -293,6 +293,11 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
     });
   };
 
+  const handleReset = () => {
+    reset();
+    router.push('/scenarios');
+  };
+
   // code 복원 실패 시 에러 안내
   if (decodeError) {
     return <div className="p-8 text-center text-red-500">공유 데이터 해석에 실패했습니다.<br />링크가 잘못되었거나 손상되었습니다.</div>;
@@ -413,10 +418,10 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
 
         <div className="text-center mt-12 space-y-4">
           <button
-            onClick={reset}
+            onClick={handleReset}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg text-lg transition-transform transform hover:scale-105"
           >
-            다시 진단하기
+            {codeParam ? '나도 진단하기' : '다시 진단하기'}
           </button>
           {/* 공유 버튼: code 파라미터 없고 answers가 1개 이상일 때만 노출 */}
           {(!codeParam && restoredAnswers && restoredAnswers.length > 0) && (
