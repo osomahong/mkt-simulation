@@ -7,7 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 interface ScenarioResultPageProps {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export default function ScenarioResultPage({ searchParams }: ScenarioResultPageProps) {
@@ -19,6 +19,7 @@ export default function ScenarioResultPage({ searchParams }: ScenarioResultPageP
   const { answers } = useScenarioStore();
   const [sharedResult, setSharedResult] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
+  const code = searchParams && typeof searchParams.code === 'string' ? searchParams.code : null;
 
   useEffect(() => {
     if (rid) {
@@ -31,10 +32,10 @@ export default function ScenarioResultPage({ searchParams }: ScenarioResultPageP
         }
         setLoading(false);
       });
-    } else if (!answers || answers.length === 0) {
+    } else if (!code && (!answers || answers.length === 0)) {
       router.replace('/scenarios');
     }
-  }, [rid, answers, router]);
+  }, [rid, code, answers, router]);
 
   useEffect(() => {
     // 페이지 진입 시 view_result 이벤트 트리거
@@ -49,6 +50,6 @@ export default function ScenarioResultPage({ searchParams }: ScenarioResultPageP
   if (rid && loading) return <div className="p-8 text-center">결과를 불러오는 중입니다...</div>;
   if (rid && !loading && !sharedResult) return <div className="p-8 text-center text-red-500">공유된 결과를 찾을 수 없습니다.</div>;
   if (rid && sharedResult) return <ScenarioResult sharedResult={sharedResult} />;
-  if (!answers || answers.length === 0) return null;
+  if (!code && (!answers || answers.length === 0)) return null;
   return <ScenarioResult />;
 } 

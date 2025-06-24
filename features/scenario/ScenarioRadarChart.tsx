@@ -28,12 +28,19 @@ interface RadarChartProps {
 }
 
 const ScenarioRadarChart = ({ data }: RadarChartProps) => {
+  // 최대 점수(문항 수) 계산
+  const maxScore = Math.max(...Object.values(data), 1);
+  // 퍼센트 변환
+  const percentData = Object.fromEntries(
+    Object.entries(data).map(([k, v]) => [k, Math.round((v / maxScore) * 100)])
+  );
+
   const chartData = {
-    labels: Object.keys(data),
+    labels: Object.keys(percentData),
     datasets: [
       {
         label: '나의 마케팅 성향',
-        data: Object.values(data),
+        data: Object.values(percentData),
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 2,
@@ -55,7 +62,7 @@ const ScenarioRadarChart = ({ data }: RadarChartProps) => {
           color: 'rgba(0, 0, 0, 0.1)',
         },
         suggestedMin: 0,
-        suggestedMax: Math.max(...Object.values(data), 3) + 1, // 점수가 낮아도 차트 모양이 잘 보이도록
+        suggestedMax: 100, // 퍼센트 기준
         grid: {
           color: 'rgba(0, 0, 0, 0.1)',
         },
@@ -69,7 +76,7 @@ const ScenarioRadarChart = ({ data }: RadarChartProps) => {
         ticks: {
           display: false,
           backdropColor: 'transparent',
-          stepSize: 1,
+          stepSize: 20,
         }
       },
     },
@@ -80,7 +87,7 @@ const ScenarioRadarChart = ({ data }: RadarChartProps) => {
       tooltip: {
         callbacks: {
           label: function(context: any) {
-            return `${context.dataset.label}: ${context.raw}`
+            return `${context.dataset.label}: ${context.raw}%`
           }
         }
       }

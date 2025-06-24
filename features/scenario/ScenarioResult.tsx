@@ -1,10 +1,18 @@
-import React, { useMemo, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useMemo, useEffect, useState, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import useScenarioStore from '@/stores/scenarioStore';
 import { analyzeAnswers } from './scenario.analysis';
 import ScenarioRadarChart from './ScenarioRadarChart';
-import { getClientId, calculatePercentage } from '@/lib/utils';
+import { getClientId, calculatePercentage, encodeIdx, decodeIdx, encodeShareCode, decodeShareCode } from '@/lib/utils';
 import { Metadata } from 'next';
+import questionsData from './scenario.questions.json';
+import { Question } from './scenario.types';
+
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
 
 export async function generateMetadata({ searchParams }: { searchParams: Record<string, string> }): Promise<Metadata> {
   const type = searchParams.type || "마케터 유형";
@@ -43,9 +51,59 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
     marketerType: state.marketerType,
   }));
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // code 파라미터 사용 (idx+id 시퀀스 동시 encode)
+  const codeParam = searchParams ? searchParams.get('code') : null;
+  let sharedIdxArr: number[] | null = null;
+  let sharedIdArr: string[] | null = null;
+  let decodeError = false;
+  if (codeParam) {
+    try {
+      const decoded = decodeShareCode(codeParam);
+      if (!decoded) throw new Error('decode failed');
+      sharedIdxArr = decoded.idxArr;
+      sharedIdArr = decoded.idArr;
+      if (!sharedIdxArr || !sharedIdArr) throw new Error('decode failed');
+    } catch {
+      sharedIdxArr = null;
+      sharedIdArr = null;
+      decodeError = true;
+    }
+  }
+
+  // code 파라미터로 진입 시 questions를 idArr로 재구성
+  const [loadedQuestions, setLoadedQuestions] = useState<Question[]>([]);
+  
+  useEffect(() => {
+    if (codeParam && sharedIdArr && sharedIdArr.length > 0) {
+      // idArr 순서대로 questionsData에서 매칭
+      const allQuestions = questionsData as Question[];
+      const matched = sharedIdArr.map(id => allQuestions.find(q => q.id === id)).filter(Boolean) as Question[];
+      setLoadedQuestions(matched);
+    } else {
+      setLoadedQuestions(questions);
+    }
+  }, [codeParam, JSON.stringify(sharedIdArr), questions]);
+
+  // code 파라미터로 진입 시 idx 배열을 answers 객체로 복원
+  const restoredAnswers = useMemo(() => {
+    if (codeParam && sharedIdxArr && loadedQuestions.length === sharedIdxArr.length) {
+      return sharedIdxArr.map((idx, i) => {
+        const q = loadedQuestions[i];
+        const choice = q.choices[idx];
+        return {
+          questionId: q.id,
+          tags: choice.tags,
+          difficulty: q.difficulty,
+        };
+      });
+    }
+    return answers;
+  }, [codeParam, sharedIdxArr, loadedQuestions, answers]);
 
   // sharedResult가 있으면 해당 데이터로 대체
-  const resultAnswers = sharedResult ? sharedResult.answers : answers;
+  const resultAnswers = sharedResult ? sharedResult.answers : restoredAnswers;
   const resultPersona = sharedResult ? sharedResult.persona : undefined;
   const resultSalaryInfo = sharedResult ? sharedResult.salaryInfo : salaryInfo;
 
@@ -62,15 +120,15 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
     } else {
       // 기존 로직
       const scores: { [tag: string]: number } = {};
-      answers.forEach(answer => {
+      restoredAnswers.forEach(answer => {
         answer.tags.forEach(tag => {
           scores[tag] = (scores[tag] || 0) + 1;
         });
       });
-      const personaResult = analyzeAnswers(answers);
+      const personaResult = analyzeAnswers(restoredAnswers);
       return { persona: personaResult, tagScores: scores };
     }
-  }, [sharedResult, resultPersona, resultAnswers, answers]);
+  }, [sharedResult, resultPersona, resultAnswers, restoredAnswers]);
 
   // 통계 상태
   const [statistics, setStatistics] = useState<Statistics | null>(null);
@@ -102,14 +160,14 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
 
   // 결과 저장 (최초 1회만)
   useEffect(() => {
-    if (answers.length > 0) {
+    if (restoredAnswers.length > 0) {
       const clientId = getClientId();
       fetch('/api/submitResult', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           persona, 
-          answers, 
+          answers: restoredAnswers, 
           clientId, 
           salaryInfo 
         }),
@@ -143,6 +201,95 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
     if (title.includes('공감')) return '😊';
     return '✨';
   };
+
+  // 공유 버튼 클릭 시 code 파라미터 복사 (idArr도 포함)
+  const handleShare = () => {
+    if (!restoredAnswers || restoredAnswers.length === 0) {
+      alert('공유할 데이터가 없습니다.');
+      return;
+    }
+    const idxArr = restoredAnswers.map((ans, i) => {
+      const q = loadedQuestions[i];
+      if (!q) return -1;
+      // 선택한 choice의 인덱스 찾기
+      const idx = q.choices.findIndex((c) => JSON.stringify(c.tags) === JSON.stringify(ans.tags));
+      return idx;
+    });
+    const idArr = loadedQuestions.map(q => q.id);
+    if (idxArr.some((v) => v < 0)) {
+      alert('공유할 수 없는 답변이 있습니다.');
+      return;
+    }
+    const codeStr = encodeShareCode(idxArr, idArr); // idx+id 시퀀스 encode
+    const shareUrl = `${window.location.origin}/scenarios/result?code=${codeStr}`;
+    navigator.clipboard.writeText(shareUrl);
+    alert('공유 링크가 복사되었습니다!');
+  };
+
+  // 카카오 SDK 동적 로드 (최초 1회)
+  const kakaoLoaded = useRef(false);
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.Kakao && !document.getElementById('kakao-sdk')) {
+      const script = document.createElement('script');
+      script.id = 'kakao-sdk';
+      script.src = 'https://developers.kakao.com/sdk/js/kakao.js';
+      script.async = true;
+      script.onload = () => {
+        if (window.Kakao && !window.Kakao.isInitialized()) {
+          window.Kakao.init('f265d81144e358dad13c422075f42c62');
+        }
+        kakaoLoaded.current = true;
+      };
+      document.body.appendChild(script);
+    } else if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init('f265d81144e358dad13c422075f42c62');
+      kakaoLoaded.current = true;
+    }
+  }, []);
+
+  // 카카오톡 공유 함수
+  const handleKakaoShare = () => {
+    if (!window.Kakao || !window.Kakao.Share) {
+      alert('카카오 SDK 로딩 중입니다. 잠시 후 다시 시도해 주세요.');
+      return;
+    }
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init('f265d81144e358dad13c422075f42c62');
+    }
+    window.Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: `${getTitleEmoji(persona.title)} ${persona.title}`,
+        description: `10문항으로 알아보는 나의 마케터 유형과 강점!\n강점: ${(persona.strengths || []).join(', ')}`,
+        imageUrl: `${window.location.origin}/og-images/result.png`,
+        link: {
+          webUrl: window.location.href,
+          mobileWebUrl: window.location.href,
+        },
+      },
+      buttons: [
+        {
+          title: '결과 자세히 보기',
+          link: {
+            webUrl: window.location.href,
+            mobileWebUrl: window.location.href,
+          },
+        },
+        {
+          title: '나도 테스트 해보기',
+          link: {
+            webUrl: window.location.origin,
+            mobileWebUrl: window.location.origin,
+          },
+        },
+      ],
+    });
+  };
+
+  // code 복원 실패 시 에러 안내
+  if (decodeError) {
+    return <div className="p-8 text-center text-red-500">공유 데이터 해석에 실패했습니다.<br />링크가 잘못되었거나 손상되었습니다.</div>;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
@@ -211,8 +358,8 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
               내 답변과 다른 사람들의 비교
             </h2>
             <div className="space-y-4">
-              {answers.map((answer, index) => {
-                const question = questions.find(q => q.id === answer.questionId);
+              {restoredAnswers.map((answer, index) => {
+                const question = loadedQuestions.find(q => q.id === answer.questionId);
                 const comparison = getAnswerComparison(answer.questionId, answer.tags);
                 
                 if (!question || !comparison) return null;
@@ -264,7 +411,24 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
           >
             다시 진단하기
           </button>
-          
+          {/* 공유 버튼: code 파라미터 없고 answers가 1개 이상일 때만 노출 */}
+          {(!codeParam && restoredAnswers && restoredAnswers.length > 0) && (
+            <>
+              <button
+                onClick={handleShare}
+                className="w-full bg-gray-100 hover:bg-gray-200 text-blue-700 font-bold py-3 rounded-lg text-lg border border-gray-300"
+              >
+                결과 공유 링크 복사
+              </button>
+              <button
+                onClick={handleKakaoShare}
+                className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 rounded-lg text-lg border border-yellow-300 flex items-center justify-center gap-2"
+              >
+                <img src="/og-images/KakaoTalk_logo.png" alt="카카오톡" style={{ width: 24, height: 24 }} />
+                카카오톡으로 공유
+              </button>
+            </>
+          )}
           {salaryInfo?.salary && (
             <div>
               <button
@@ -273,7 +437,7 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
               >
                 연봉결과 페이지 보기
               </button>
-              <p className="text-sm text-slate-500 mt-2">
+              <p className="text-[11px] sm:text-sm text-slate-500 mt-2">
                 나와 같은 선택을 한 사용자들의 평균 연봉을 확인해보세요
               </p>
             </div>

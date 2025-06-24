@@ -8,6 +8,18 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "마케터 역량 진단",
   description: "당신의 마케터 유형을 진단하고 강점을 발견하세요",
+  openGraph: {
+    title: "마케터 역량 진단",
+    description: "당신의 마케터 유형을 진단하고 강점을 발견하세요",
+    images: [
+      {
+        url: '/og-images/main.png',
+        width: 720,
+        height: 720,
+        alt: '마케터 성향테스트 대표 썸네일',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -16,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <head>
         {/* Google Tag Manager */}
         <Script
