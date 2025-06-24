@@ -269,17 +269,10 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
       },
       buttons: [
         {
-          title: '결과 자세히 보기',
+          title: '결과 보러가기',
           link: {
             webUrl: window.location.href,
             mobileWebUrl: window.location.href,
-          },
-        },
-        {
-          title: '나도 테스트 해보기',
-          link: {
-            webUrl: window.location.origin,
-            mobileWebUrl: window.location.origin,
           },
         },
       ],
@@ -425,7 +418,7 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
                 className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 rounded-lg text-lg border border-yellow-300 flex items-center justify-center gap-2"
               >
                 <img src="/og-images/KakaoTalk_logo.png" alt="카카오톡" style={{ width: 24, height: 24 }} />
-                카카오톡으로 공유
+                결과 보러가기
               </button>
             </>
           )}
