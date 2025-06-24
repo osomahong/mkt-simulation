@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       persona,
       answers,
       clientId: clientId || 'anonymous',
-      marketerType,
+      marketerType: marketerType || 'unknown',
       createdAt: new Date(),
     };
 
@@ -41,6 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await setDoc(doc(db, "results", shortId), resultData);
     res.status(200).json({ ok: true, resultId: shortId });
   } catch (e) {
+    console.error(e);
     res.status(500).json({ ok: false, error: String(e) });
   }
 } 

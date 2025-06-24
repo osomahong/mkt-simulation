@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import useScenarioStore from '@/stores/scenarioStore';
+import glossary from './glossary.json';
 
 declare global {
   interface Window {
@@ -22,6 +23,35 @@ export const metadata = {
   },
 };
 
+// 용어가 포함된 텍스트를 자동으로 진하게 감싸주는 함수
+function highlightTermsBold(text: string, terms: string[]) {
+  if (!text) return text;
+  let result: React.ReactNode[] = [text];
+  terms.forEach(term => {
+    result = result.flatMap(chunk => {
+      if (typeof chunk !== 'string') return [chunk];
+      const parts = chunk.split(term);
+      if (parts.length === 1) return [chunk];
+      const nodes: React.ReactNode[] = [];
+      parts.forEach((part, i) => {
+        nodes.push(part);
+        if (i < parts.length - 1) nodes.push(<b key={i+term} className="text-blue-700">{term}</b>);
+      });
+      return nodes;
+    });
+  });
+  return result;
+}
+
+// 현재 문제/선택지에 등장하는 용어만 추출
+function extractTermsFromCurrent(questions: any, currentQuestion: any) {
+  const texts = [currentQuestion.question, ...currentQuestion.choices.map((c: any) => c.text)];
+  const terms = glossary.map(g => g.term).filter(term =>
+    texts.some(t => t.includes(term))
+  );
+  return terms;
+}
+
 const ScenarioQuiz = () => {
   const { questions, currentQuestionIndex, answerQuestion } = useScenarioStore(
     state => ({
@@ -37,6 +67,9 @@ const ScenarioQuiz = () => {
   if (!currentQuestion) {
     return <div>질문을 불러오는 중입니다...</div>;
   }
+
+  const termsInCurrent = extractTermsFromCurrent(questions, currentQuestion);
+  const glossaryInCurrent = glossary.filter(g => termsInCurrent.includes(g.term));
 
   // 답변 선택 핸들러
   const handleAnswer = (choice: { text: string; tags: string[] }, index: number) => {
@@ -71,7 +104,7 @@ const ScenarioQuiz = () => {
 
         <div className="bg-white p-6 sm:p-8 rounded-xl shadow-md">
           <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-slate-800 break-words">
-            {currentQuestion.question}
+            {highlightTermsBold(currentQuestion.question, termsInCurrent)}
           </h2>
           <div className="flex justify-center gap-2 mb-8">
             <div className="flex items-center bg-slate-100 rounded-full px-3 py-1 text-xs font-semibold text-slate-700">
@@ -100,12 +133,23 @@ const ScenarioQuiz = () => {
                 className="bg-slate-50 hover:bg-blue-100 border border-slate-200 text-slate-700 font-medium py-3 px-4 sm:py-4 sm:px-6 rounded-lg text-left transition-colors duration-200 w-full"
               >
                 <span className="text-sm sm:text-base break-words">
-                  {choice.text}
+                  {highlightTermsBold(choice.text, termsInCurrent)}
                 </span>
               </button>
             ))}
           </div>
         </div>
+        {/* 등장 용어 해설 */}
+        {glossaryInCurrent.length > 0 && (
+          <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+            <div className="font-bold text-yellow-700 mb-2">이 문제에 등장한 용어 해설</div>
+            <ul className="text-sm text-slate-700 space-y-1">
+              {glossaryInCurrent.map(g => (
+                <li key={g.term}><b className="text-blue-700">{g.term}</b>: {g.definition}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

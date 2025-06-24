@@ -169,7 +169,8 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
           persona, 
           answers: restoredAnswers, 
           clientId, 
-          salaryInfo 
+          salaryInfo,
+          marketerType
         }),
       });
     }
@@ -395,10 +396,13 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
                         </span>
                       </div>
                       <div className="flex flex-col items-start sm:items-end min-w-[60px]">
-                        <span className={`text-base font-bold ${
-                          isPopular ? 'text-green-600' : 
-                          isUnique ? 'text-purple-600' : 'text-blue-600'
-                        }`}>
+                        <span
+                          className={`text-base font-bold ${
+                            isPopular ? 'text-green-600' : 
+                            isUnique ? 'text-purple-600' : 'text-blue-600'
+                          }`}
+                          style={{ fontFamily: 'Noto Sans KR, sans-serif' }}
+                        >
                           {comparison.percentage}%
                         </span>
                         <span className="text-xs text-slate-500">100명 중 {Math.round(comparison.percentage)}명이 같은 대답</span>
