@@ -5,7 +5,7 @@ import ScenarioTypeSelector from './ScenarioTypeSelector';
 
 const ScenarioPage = () => {
   return (
-    <div className="h-screen bg-gray-50">
+    <div className="h-screen">
       <ScenarioTypeSelector />
     </div>
   );

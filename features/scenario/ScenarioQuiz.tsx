@@ -65,7 +65,13 @@ const ScenarioQuiz = () => {
   const currentQuestion = questions[currentQuestionIndex];
 
   if (!currentQuestion) {
-    return <div>질문을 불러오는 중입니다...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-8 text-center">
+          <div className="animate-pulse">⏳ 질문을 불러오는 중입니다...</div>
+        </div>
+      </div>
+    );
   }
 
   const termsInCurrent = extractTermsFromCurrent(questions, currentQuestion);
@@ -94,26 +100,26 @@ const ScenarioQuiz = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
       <div className="w-full max-w-2xl">
         <div className="text-center mb-8">
-          <p className="text-base sm:text-lg font-semibold text-slate-700">
-            Question {currentQuestionIndex + 1} / {questions.length}
+          <p className="text-base sm:text-lg font-semibold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent flex items-center justify-center gap-2">
+            📝 Question {currentQuestionIndex + 1} / {questions.length}
           </p>
         </div>
 
-        <div className="bg-white p-6 sm:p-8 rounded-xl shadow-md">
-          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-slate-800 break-words">
+        <div className="bg-white/80 backdrop-blur-sm p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-200/50 hover:shadow-2xl transition-all duration-300">
+          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent break-words">
             {highlightTermsBold(currentQuestion.question, termsInCurrent)}
           </h2>
           <div className="flex justify-center gap-2 mb-8">
-            <div className="flex items-center bg-slate-100 rounded-full px-3 py-1 text-xs font-semibold text-slate-700">
-              <span className="font-bold mr-1">질문유형:</span>
+            <div className="flex items-center bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-full px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm">
+              <span className="font-bold mr-1">📋 질문유형:</span>
               <span className="text-blue-700">{currentQuestion.category}</span>
             </div>
             <span className="text-slate-400 font-bold px-1">|</span>
-            <div className="flex items-center bg-slate-100 rounded-full px-3 py-1 text-xs font-semibold text-slate-700">
-              <span className="font-bold mr-1">난이도:</span>
+            <div className="flex items-center bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 rounded-full px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm">
+              <span className="font-bold mr-1">⭐ 난이도:</span>
               <span className={
                 currentQuestion.difficulty === '어려움'
                   ? 'text-red-600'
@@ -130,7 +136,7 @@ const ScenarioQuiz = () => {
               <button
                 key={index}
                 onClick={() => handleAnswer(choice, index)}
-                className="bg-slate-50 hover:bg-blue-100 border border-slate-200 text-slate-700 font-medium py-3 px-4 sm:py-4 sm:px-6 rounded-lg text-left transition-colors duration-200 w-full"
+                className="bg-gradient-to-r from-slate-50/80 to-slate-100/80 hover:from-blue-50 hover:to-indigo-50 border border-slate-200/50 hover:border-blue-300/50 text-slate-700 font-medium py-3 px-4 sm:py-4 sm:px-6 rounded-xl text-left transition-all duration-300 w-full shadow-sm hover:shadow-md transform hover:scale-[1.02] hover:-translate-y-0.5 backdrop-blur-sm"
               >
                 <span className="text-sm sm:text-base break-words">
                   {highlightTermsBold(choice.text, termsInCurrent)}
@@ -141,11 +147,15 @@ const ScenarioQuiz = () => {
         </div>
         {/* 등장 용어 해설 */}
         {glossaryInCurrent.length > 0 && (
-          <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-            <div className="font-bold text-yellow-700 mb-2">이 문제에 등장한 용어 해설</div>
-            <ul className="text-sm text-slate-700 space-y-1">
+          <div className="mt-8 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 border border-yellow-200/50 rounded-2xl p-4 shadow-lg backdrop-blur-sm">
+            <div className="font-bold bg-gradient-to-r from-yellow-700 to-amber-700 bg-clip-text text-transparent mb-2 flex items-center gap-2">
+              💡 이 문제에 등장한 용어 해설
+            </div>
+            <ul className="text-sm text-slate-700 space-y-2">
               {glossaryInCurrent.map(g => (
-                <li key={g.term}><b className="text-blue-700">{g.term}</b>: {g.definition}</li>
+                <li key={g.term} className="bg-white/60 rounded-lg p-2 border border-yellow-200/30">
+                  <b className="text-blue-700">{g.term}</b>: {g.definition}
+                </li>
               ))}
             </ul>
           </div>

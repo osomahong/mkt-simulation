@@ -27,6 +27,15 @@ const SalaryResult = () => {
   const [perQuestionSalaries, setPerQuestionSalaries] = useState<PerQuestionSalary[]>([]);
   const router = useRouter();
 
+  // 연차 구간 계산 함수 추가
+  const getExperienceGroup = (years: number | null): string => {
+    if (years === null || years === undefined) return 'unknown';
+    if (years <= 2) return 'junior'; // 0-2년
+    if (years <= 5) return 'mid'; // 3-5년
+    if (years <= 10) return 'senior'; // 6-10년
+    return 'lead'; // 11년+
+  };
+
   useEffect(() => {
     if (!salaryInfo?.salary) {
       setLoading(false);
@@ -47,11 +56,16 @@ const SalaryResult = () => {
 
         const querySnapshot = await getDocs(q);
         const salaries: number[] = [];
+        const myExperienceGroup = getExperienceGroup(salaryInfo.yearsOfExperience);
 
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           // 한 문제라도 같은 답변을 한 사용자라면 포함
           if (data.answers && Array.isArray(data.answers) && data.salary) {
+            // 연차 구간이 같은 사용자만 포함
+            const otherExperienceGroup = getExperienceGroup(data.yearsOfExperience);
+            if (otherExperienceGroup !== myExperienceGroup) return;
+            
             let hasMatch = false;
             for (let i = 0; i < answers.length; i++) {
               const myTags = answers[i].tags.join(',');
@@ -125,12 +139,17 @@ const SalaryResult = () => {
           where('hasSalary', '==', true)
         );
         const querySnapshot = await getDocs(q);
+        const myExperienceGroup = getExperienceGroup(salaryInfo.yearsOfExperience);
         const perQuestion: PerQuestionSalary[] = await Promise.all(
           answers.map(async (answer, idx) => {
             const salaries: number[] = [];
             querySnapshot.forEach((doc) => {
               const data = doc.data();
               if (data.answers && Array.isArray(data.answers) && data.salary) {
+                // 연차 구간이 같은 사용자만 포함
+                const otherExperienceGroup = getExperienceGroup(data.yearsOfExperience);
+                if (otherExperienceGroup !== myExperienceGroup) return;
+                
                 const otherAnswer = data.answers[idx];
                 if (otherAnswer && otherAnswer.tags.join(',') === answer.tags.join(',')) {
                   salaries.push(data.salary);
@@ -190,6 +209,14 @@ const SalaryResult = () => {
     return typeNames[type as keyof typeof typeNames] || type;
   };
 
+  const getExperienceGroupName = (years: number | null): string => {
+    if (years === null || years === undefined) return '연차 미입력';
+    if (years <= 2) return '신입 (0-2년)';
+    if (years <= 5) return '주니어 (3-5년)';
+    if (years <= 10) return '시니어 (6-10년)';
+    return '리드 (11년+)';
+  };
+
   const getPercentileText = (percentile: number) => {
     if (percentile >= 90) return '상위 10%';
     if (percentile >= 80) return '상위 20%';
@@ -242,10 +269,10 @@ const SalaryResult = () => {
 
   if (!salaryInfo?.salary) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 통계 결과</h1>
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4">💼 연봉 통계 결과</h1>
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 mb-6 hover:shadow-2xl transition-all duration-300">
             <p className="text-slate-600 mb-4">
               연봉 정보를 입력하지 않으셨기 때문에 비교 통계를 확인할 수 없습니다.
             </p>
@@ -255,7 +282,7 @@ const SalaryResult = () => {
           </div>
           <button
             onClick={handleReset}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5"
           >
             다시 진단하기
           </button>
@@ -266,10 +293,10 @@ const SalaryResult = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 통계 결과</h1>
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4">⏳ 연봉 통계 결과</h1>
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6">
             <div className="animate-pulse">
               <div className="h-4 bg-slate-200 rounded mb-4"></div>
               <div className="h-4 bg-slate-200 rounded mb-4"></div>
@@ -283,17 +310,17 @@ const SalaryResult = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 통계 결과</h1>
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4">📊 연봉 통계 결과</h1>
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 mb-6 hover:shadow-2xl transition-all duration-300">
             <p className="text-red-600 mb-4">아직 데이터가 부족해요! 🐣</p>
             <p className="text-sm text-slate-500 mb-4">
               더 많은 사람들이 참여하면, 연봉별 통계를 볼 수 있을 거에요!
             </p>
             <button
               onClick={handleKakaoShare}
-              className="w-full py-3 rounded-lg text-lg font-bold flex items-center justify-center gap-2 mb-2"
+              className="w-full py-3 rounded-xl text-lg font-bold flex items-center justify-center gap-2 mb-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5"
               style={{ backgroundColor: 'rgb(255, 244, 19)' }}
             >
               <img src="/og-images/KakaoTalk_logo.png" alt="카카오톡" style={{ width: 24, height: 24 }} />
@@ -302,7 +329,7 @@ const SalaryResult = () => {
           </div>
           <button
             onClick={handleReset}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5"
           >
             다시 진단하기
           </button>
@@ -312,20 +339,27 @@ const SalaryResult = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
       <div className="w-full max-w-md text-center">
-        <h1 className="text-2xl font-bold text-slate-800 mb-4">연봉 통계 결과</h1>
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4">📈 연봉 통계 결과</h1>
         
-        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 mb-6 hover:shadow-2xl transition-all duration-300">
           <h2 className="text-lg font-semibold text-slate-800 mb-4">
             {getMarketerTypeName(marketerType!)} 연봉 통계
           </h2>
+          <p className="text-sm text-slate-600 mb-4">
+            연차 구간: <span className="font-semibold text-blue-600">
+              {getExperienceGroupName(salaryInfo.yearsOfExperience)}
+            </span>
+          </p>
           
           <div className="space-y-4">
             {/* 평균 연봉 */}
-            <div className="bg-blue-50 rounded-lg p-4">
-              <p className="text-sm text-blue-600 mb-1">나와 같은 선택을 한 사용자의 평균 연봉</p>
-              <p className="text-2xl font-bold text-blue-800">
+            <div className="bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-100 rounded-xl p-4 border border-blue-200/50 shadow-sm hover:shadow-md transition-all duration-300">
+              <p className="text-sm text-blue-700 mb-1 flex items-center gap-1">
+                📊 나와 비슷한 선택을 한 사용자의 평균 연봉
+              </p>
+              <p className="text-2xl font-bold bg-gradient-to-r from-blue-800 to-indigo-800 bg-clip-text text-transparent">
                 {stats?.averageSalary.toLocaleString()}만원
               </p>
               <p className="text-xs text-blue-600 mt-1">
@@ -334,19 +368,21 @@ const SalaryResult = () => {
             </div>
 
             {/* 내 연봉과 순위 */}
-            <div className="bg-green-50 rounded-lg p-4">
-              <p className="text-sm text-green-600 mb-1">내 연봉</p>
-              <p className="text-xl font-bold text-green-800">
+            <div className="bg-gradient-to-br from-emerald-50 via-green-50 to-teal-100 rounded-xl p-4 border border-green-200/50 shadow-sm hover:shadow-md transition-all duration-300">
+              <p className="text-sm text-green-700 mb-1 flex items-center gap-1">
+                💰 내 연봉
+              </p>
+              <p className="text-xl font-bold bg-gradient-to-r from-green-800 to-emerald-800 bg-clip-text text-transparent">
                 {salaryInfo.salary?.toLocaleString()}만원
               </p>
-              <p className="text-sm text-green-600 mt-1">
-                {getPercentileText(stats?.percentile || 0)} ({stats?.percentile}%)
+              <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
+                🏆 {getPercentileText(stats?.percentile || 0)} ({stats?.percentile}%)
               </p>
             </div>
 
             {/* 통계 설명 */}
             <div className="text-xs text-slate-500 space-y-1">
-              <p>• 같은 마케터 유형과 답변 패턴을 가진 사용자 기준</p>
+              <p>• 같은 마케터 유형, 연차, 답변 패턴을 가진 사용자 기준</p>
               <p>• 연봉을 입력한 사용자 {stats?.totalCount}명 중</p>
               <p>• 극단값(상위/하위 5%)을 제외한 평균</p>
             </div>
@@ -356,7 +392,9 @@ const SalaryResult = () => {
         {/* 문항별 평균 연봉 카드 */}
         {perQuestionSalaries.length > 0 && (
           <div className="mt-10">
-            <h3 className="text-lg font-bold text-slate-700 mb-4">문항별 나와 같은 선택의 평균 연봉</h3>
+            <h3 className="text-lg font-bold bg-gradient-to-r from-slate-700 to-slate-600 bg-clip-text text-transparent mb-4 flex items-center justify-center gap-2">
+              📋 문항별 나와 비슷한 사용자의 평균 연봉
+            </h3>
             <div className="space-y-4">
               {perQuestionSalaries.map((item, idx) => {
                 // 내 선택 텍스트 찾기
@@ -368,7 +406,7 @@ const SalaryResult = () => {
                   if (found) myChoiceText = found.text;
                 }
                 return (
-                  <div key={item.questionId} className="bg-slate-50 rounded-lg p-4 text-left">
+                  <div key={item.questionId} className="bg-white/60 backdrop-blur-sm rounded-xl p-4 text-left shadow-md hover:shadow-lg transition-all duration-300 border border-slate-200/30">
                     <div className="text-base font-semibold text-slate-700 mb-2">
                       Q{idx + 1}. {item.question}
                     </div>
@@ -394,7 +432,7 @@ const SalaryResult = () => {
         <div className="space-y-3">
           <button
             onClick={handleReset}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5"
           >
             다시 진단하기
           </button>

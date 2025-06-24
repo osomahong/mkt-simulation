@@ -299,21 +299,47 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
     router.push('/scenarios');
   };
 
+  // 연봉 통계 페이지 이동 핸들러
+  const handleSalaryResultPage = () => {
+    if (!salaryInfo?.salary) {
+      // 연봉 정보가 없으면 알림창 표시
+      const shouldGoToSalaryInput = window.confirm(
+        '연봉 통계를 보려면 연봉 정보가 필요해요! 💰\n\n연봉을 입력하고 다시 진단하시겠습니까?\n\n확인을 누르면 처음부터 다시 시작합니다.'
+      );
+      
+      if (shouldGoToSalaryInput) {
+        // 스토어 초기화하고 메인 페이지로 이동
+        reset();
+        router.push('/scenarios');
+      }
+      return;
+    }
+    
+    // 연봉 정보가 있으면 바로 이동
+    router.push('/scenarios/salary-result');
+  };
+
   // code 복원 실패 시 에러 안내
   if (decodeError) {
-    return <div className="p-8 text-center text-red-500">공유 데이터 해석에 실패했습니다.<br />링크가 잘못되었거나 손상되었습니다.</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-8 text-center">
+          <div className="text-red-600">⚠️ 공유 데이터 해석에 실패했습니다.<br />링크가 잘못되었거나 손상되었습니다.</div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
-      <div className="w-full max-w-4xl bg-white p-6 sm:p-8 rounded-2xl shadow-lg text-center">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
+      <div className="w-full max-w-4xl bg-white/80 backdrop-blur-sm p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-200/50 text-center hover:shadow-2xl transition-all duration-300">
         <p className="text-base sm:text-lg font-medium text-blue-600">
           당신의 마케팅 성향 결과
         </p>
         {marketerType && (
           <div className="text-lg font-semibold text-slate-700 mb-1">{marketerType} 마케터</div>
         )}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-2 text-slate-800 flex items-center justify-center gap-2">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-2 bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent flex items-center justify-center gap-2">
           <span>{getTitleEmoji(persona.title)}</span> {persona.title}
         </h1>
 
@@ -423,22 +449,22 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
         <div className="text-center mt-12 space-y-4">
           <button
             onClick={handleReset}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg text-lg transition-transform transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 flex items-center justify-center gap-2"
           >
-            {codeParam ? '나도 진단하기' : '다시 진단하기'}
+            🔄 {codeParam ? '나도 진단하기' : '다시 진단하기'}
           </button>
           {/* 공유 버튼: code 파라미터 없고 answers가 1개 이상일 때만 노출 */}
           {(!codeParam && restoredAnswers && restoredAnswers.length > 0) && (
             <>
               <button
                 onClick={handleShare}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-blue-700 font-bold py-3 rounded-lg text-lg border border-gray-300"
+                className="w-full bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-blue-700 font-semibold py-3 rounded-xl text-lg border border-slate-300/50 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 flex items-center justify-center gap-2"
               >
-                결과 공유 링크 복사
+                🔗 결과 공유 링크 복사
               </button>
               <button
                 onClick={handleKakaoShare}
-                className="w-full py-3 rounded-lg text-lg font-bold flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl text-lg font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5"
                 style={{ backgroundColor: 'rgb(255, 244, 19)' }}
               >
                 <img src="/og-images/KakaoTalk_logo.png" alt="카카오톡" style={{ width: 24, height: 24 }} />
@@ -446,19 +472,20 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
               </button>
             </>
           )}
-          {salaryInfo?.salary && (
-            <div>
-              <button
-                onClick={() => router.push('/scenarios/salary-result')}
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-lg transition-transform transform hover:scale-105"
-              >
-                연봉결과 페이지 보기
-              </button>
-              <p className="text-[11px] sm:text-sm text-slate-500 mt-2">
-                나와 같은 선택을 한 사용자들의 평균 연봉을 확인해보세요
-              </p>
-            </div>
-          )}
+          <div>
+            <button
+              onClick={handleSalaryResultPage}
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+            >
+              💰 연봉통계 보러가기
+            </button>
+            <p className="text-[11px] sm:text-sm text-slate-500 mt-2">
+              {salaryInfo?.salary 
+                ? '나와 비슷한 사용자들의 평균 연봉을 확인해보세요' 
+                : '연봉을 입력하면 동료 마케터들과 비교할 수 있어요'
+              }
+            </p>
+          </div>
         </div>
       </div>
     </div>

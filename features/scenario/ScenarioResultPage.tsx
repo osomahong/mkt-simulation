@@ -47,8 +47,20 @@ export default function ScenarioResultPage({ searchParams }: ScenarioResultPageP
     }
   }, [rid]);
 
-  if (rid && loading) return <div className="p-8 text-center">결과를 불러오는 중입니다...</div>;
-  if (rid && !loading && !sharedResult) return <div className="p-8 text-center text-red-500">공유된 결과를 찾을 수 없습니다.</div>;
+  if (rid && loading) return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-8 text-center">
+        <div className="animate-pulse">⏳ 결과를 불러오는 중입니다...</div>
+      </div>
+    </div>
+  );
+  if (rid && !loading && !sharedResult) return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-8 text-center">
+        <div className="text-red-600">⚠️ 공유된 결과를 찾을 수 없습니다.</div>
+      </div>
+    </div>
+  );
   if (rid && sharedResult) return <ScenarioResult sharedResult={sharedResult} />;
   if (!code && (!answers || answers.length === 0)) return null;
   return <ScenarioResult />;

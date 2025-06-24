@@ -19,20 +19,20 @@ const SalaryInput = () => {
   // 이미 연봉 정보가 있는 경우 수정 페이지 표시
   if (salaryInfo?.salary || salaryInfo?.yearsOfExperience) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">
-            추가 정보 입력
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-2 flex items-center justify-center gap-2">
+            📝 추가 정보 입력
           </h1>
-          <p className="text-base text-slate-600 mb-6">
+          <p className="text-base text-slate-600 mb-6 leading-relaxed">
             선택하신 유형: <span className="font-semibold text-blue-600">{getMarketerTypeName(marketerType!)}</span>
           </p>
           
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
-            <h2 className="text-lg font-semibold text-slate-800 mb-4">
-              경력과 연봉을 수정하시겠어요?
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 mb-6 hover:shadow-2xl transition-all duration-300">
+            <h2 className="text-lg font-semibold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4 flex items-center justify-center gap-2">
+              ✏️ 경력과 연봉을 수정하시겠어요?
             </h2>
-            <p className="text-sm text-slate-500 mb-6">
+            <p className="text-sm text-slate-500 mb-6 leading-relaxed">
               현재 입력된 정보:
               {salaryInfo.yearsOfExperience && ` 연차 ${salaryInfo.yearsOfExperience}년,`}
               {salaryInfo.salary && ` 연봉 ${salaryInfo.salary.toLocaleString()}만원`}
@@ -42,18 +42,18 @@ const SalaryInput = () => {
           <div className="space-y-3">
             <button
               onClick={() => setSalaryInputSkipped(true)}
-              className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+              className="w-full bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 flex items-center justify-center gap-2"
             >
-              다시보지않기
+              ⏭️ 다시보지않기
             </button>
             <button
               onClick={() => {
                 setYearsOfExperience(salaryInfo.yearsOfExperience?.toString() || '');
                 setSalary(salaryInfo.salary?.toString() || '');
               }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 flex items-center justify-center gap-2"
             >
-              네
+              ✅ 네
             </button>
           </div>
         </div>
@@ -126,20 +126,20 @@ const SalaryInput = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
       <div className="w-full max-w-md text-center">
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">
-          추가 정보 입력
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-2 flex items-center justify-center gap-2">
+          📝 추가 정보 입력
         </h1>
-        <p className="text-base text-slate-600 mb-6">
+        <p className="text-base text-slate-600 mb-6 leading-relaxed">
           선택하신 유형: <span className="font-semibold text-blue-600">{getMarketerTypeName(marketerType!)}</span>
         </p>
         
-        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
-          <h2 className="text-lg font-semibold text-slate-800 mb-4">
-            당신의 연차와 연봉을 입력해주세요
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 p-6 mb-6 hover:shadow-2xl transition-all duration-300">
+          <h2 className="text-lg font-semibold bg-gradient-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent mb-4 flex items-center justify-center gap-2">
+            💼 당신의 연차와 연봉을 입력해주세요
           </h2>
-          <p className="text-sm text-slate-500 mb-6">
+          <p className="text-sm text-slate-500 mb-6 leading-relaxed">
             이 정보는 익명으로 처리되며, 동료 마케터들과의 비교 통계에만 사용됩니다.
           </p>
 
@@ -205,15 +205,15 @@ const SalaryInput = () => {
         <div className="space-y-3">
           <button
             onClick={handleContinue}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 flex items-center justify-center gap-2"
           >
-            진단 시작하기
+            🚀 진단 시작하기
           </button>
           <button
             onClick={handleSkip}
-            className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+            className="w-full bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 flex items-center justify-center gap-2"
           >
-            연봉 입력 건너뛰기
+            ⏭️ 연봉 입력 건너뛰기
           </button>
         </div>
 
