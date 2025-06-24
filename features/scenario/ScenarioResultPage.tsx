@@ -9,7 +9,7 @@ import { db } from '@/lib/firebase';
 export default function ScenarioResultPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rid = searchParams.get('rid');
+  const rid = searchParams ? searchParams.get('rid') : null;
   const { answers } = useScenarioStore();
   const [sharedResult, setSharedResult] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
