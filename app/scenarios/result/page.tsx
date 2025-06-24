@@ -4,6 +4,10 @@ export const metadata = {
 
 import ScenarioResultPage from '@/features/scenario/ScenarioResultPage';
 
-export default function ResultRoutePage({ searchParams }: { searchParams: { [key: string]: string } }) {
+interface PageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default function ResultRoutePage({ searchParams }: PageProps) {
   return <ScenarioResultPage searchParams={searchParams} />;
 } 
