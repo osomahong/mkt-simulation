@@ -1,15 +1,18 @@
 "use client";
 import ScenarioResult from './ScenarioResult';
 import React, { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import useScenarioStore from '@/stores/scenarioStore';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
-export default function ScenarioResultPage() {
+interface ScenarioResultPageProps {
+  searchParams?: { [key: string]: string };
+}
+
+export default function ScenarioResultPage({ searchParams }: ScenarioResultPageProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const rid = searchParams ? searchParams.get('rid') : null;
+  const rid = searchParams?.rid ?? null;
   const { answers } = useScenarioStore();
   const [sharedResult, setSharedResult] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);

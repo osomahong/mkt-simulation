@@ -4,6 +4,6 @@ export const metadata = {
 
 import ScenarioResultPage from '@/features/scenario/ScenarioResultPage';
 
-export default function ResultRoutePage() {
-  return <ScenarioResultPage />;
+export default function ResultRoutePage({ searchParams }: { searchParams: { [key: string]: string } }) {
+  return <ScenarioResultPage searchParams={searchParams} />;
 } 
