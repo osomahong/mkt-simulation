@@ -43,5 +43,6 @@ export interface Question {
   difficulty: '쉬움' | '보통' | '어려움';
   marketerType: string[];
   question: string;
+  context?: string;
   choices: Choice[];
 } 

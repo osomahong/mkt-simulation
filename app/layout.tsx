@@ -50,6 +50,28 @@ export default function RootLayout({
           }}
         />
         {/* End Google Tag Manager */}
+        
+        {/* Kakao SDK */}
+        <Script
+          id="kakao-sdk"
+          strategy="beforeInteractive"
+          src="https://developers.kakao.com/sdk/js/kakao.js"
+        />
+        
+        {/* Kakao SDK 초기화 */}
+        <Script
+          id="kakao-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined' && window.Kakao) {
+                if (!window.Kakao.isInitialized()) {
+                  window.Kakao.init('f265d81144e358dad13c422075f42c62');
+                }
+              }
+            `,
+          }}
+        />
       </head>
       <body className={inter.className}>
         {/* Google Tag Manager (noscript) */}
