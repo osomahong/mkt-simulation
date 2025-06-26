@@ -302,9 +302,13 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
 
   // 공유 기능
   const handleShare = () => {
-    const shareUrl = resultId 
+    const baseUrl = resultId 
       ? `${window.location.origin}/scenarios/result?rid=${resultId}`
       : window.location.href;
+    
+    const shareUrl = baseUrl.includes('?') 
+      ? `${baseUrl}&utm_source=copy&utm_medium=share`
+      : `${baseUrl}?utm_source=copy&utm_medium=share`;
     
     navigator.clipboard.writeText(shareUrl).then(() => {
       alert('링크가 복사되었습니다!');
@@ -312,9 +316,13 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
   };
 
   const handleKakaoShare = () => {
-    const shareUrl = resultId 
+    const baseUrl = resultId 
       ? `${window.location.origin}/scenarios/result?rid=${resultId}`
       : window.location.href;
+    
+    const shareUrl = baseUrl.includes('?') 
+      ? `${baseUrl}&utm_source=kakao&utm_medium=share`
+      : `${baseUrl}?utm_source=kakao&utm_medium=share`;
       
     if (typeof window !== 'undefined' && window.Kakao) {
       try {
@@ -338,10 +346,10 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
           },
           buttons: [
             {
-              title: '나도 테스트하기',
+              title: '마케팅 퍼스널컬러 보기',
               link: {
-                mobileWebUrl: window.location.origin + '/scenarios',
-                webUrl: window.location.origin + '/scenarios',
+                mobileWebUrl: shareUrl,
+                webUrl: shareUrl,
               },
             },
           ],
