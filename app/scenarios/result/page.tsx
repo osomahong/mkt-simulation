@@ -5,7 +5,7 @@ export const metadata = {
     description: '나의 마케터 성향과 강점을 확인해보세요!',
     images: [
       {
-        url: '/og-images/result.png',
+        url: '/og-images/result2.png',
         width: 720,
         height: 720,
         alt: '마케터 성향테스트 결과 썸네일',

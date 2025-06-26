@@ -234,7 +234,7 @@ const SalaryResult = () => {
           content: {
             title: `💰 ${getMarketerTypeName(marketerType || '')} 연봉 통계 결과`,
             description: `${getExperienceGroupName(salaryInfo?.yearsOfExperience)} | ${stats?.percentile}% (${getPercentileText(stats?.percentile || 0)})`,
-            imageUrl: `${window.location.origin}/og-images/result.png`,
+            imageUrl: `${window.location.origin}/og-images/result2.png`,
             link: {
               mobileWebUrl: window.location.origin,
               webUrl: window.location.origin,

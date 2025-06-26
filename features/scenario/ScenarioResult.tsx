@@ -338,7 +338,7 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
           content: {
             title: `나의 마케팅 Personal Color: ${result.marketingDNA}`,
             description: `${result.personalColors.join(', ')}`,
-            imageUrl: `${window.location.origin}/og-images/result.png`,
+            imageUrl: `${window.location.origin}/og-images/result2.png`,
             link: {
               mobileWebUrl: shareUrl,
               webUrl: shareUrl,
