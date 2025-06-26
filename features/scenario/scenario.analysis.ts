@@ -1313,40 +1313,7 @@ const getBalancedType = (primaryTag: string, secondaryTag: string): { dna: strin
   return getDualDominantType(primaryTag, secondaryTag);
 };
 
-// 특수형 결정 (특별한 패턴 분석)
-const getSpecialType = (answers: Answer[], tagCounts: { [tag: string]: number }): { dna: string; colors: string[] } => {
-  // 특별한 패턴 분석 (예: 모든 영역이 고르게 분포, 특정 조합 등)
-  const totalTags = Object.values(tagCounts).reduce((sum, count) => sum + count, 0);
-  const averagePerTag = totalTags / Object.keys(tagCounts).length;
-  const variance = Object.values(tagCounts).reduce((sum, count) => sum + Math.pow(count - averagePerTag, 2), 0) / Object.keys(tagCounts).length;
-  
-  // 분산 기준 완화 (2→1.5)
-  if (variance < 1.5) {
-    // 매우 균등한 분포
-    return {
-      dna: '올라운드 마케팅 스트래티지스트',
-      colors: ['균형이 흐르는 오로라 그라데이션', '조화가 빛나는 프리즘 화이트']
-    };
-  }
-  
-  // 상위 2개 태그로 이중 우세형 결정 (기본적으로 균형형으로 처리)
-  const sortedTags = Object.entries(tagCounts).sort(([, a], [, b]) => b - a);
-  
-  // 상위 태그가 2회 이상이면 이중 우세형으로 처리
-  if (sortedTags[0][1] >= 2 && sortedTags[1] && sortedTags[1][1] >= 1) {
-    return getDualDominantType(sortedTags[0][0], sortedTags[1][0]);
-  }
-  
-  // 상위 태그가 3회 이상이면 단일 우세형으로 처리
-  if (sortedTags[0][1] >= 3) {
-    return getSingleDominantType(sortedTags[0][0]);
-  }
-  
-  // 그 외의 경우는 상위 2개 태그로 이중 우세형
-  return getDualDominantType(sortedTags[0][0], sortedTags[1] ? sortedTags[1][0] : sortedTags[0][0]);
-};
-
-// 마케터 유형 결정 함수 (새로운 로직)
+// 마케터 유형 결정 함수 (개선된 로직)
 const determineMarketerType = (answers: Answer[]): { dna: string; colors: string[] } => {
   const tagCounts: { [tag: string]: number } = {};
   
@@ -1361,33 +1328,40 @@ const determineMarketerType = (answers: Answer[]): { dna: string; colors: string
   const secondaryTag = sortedTags[1] ? sortedTags[1][0] : primaryTag;
   const primaryCount = sortedTags[0][1];
   const secondaryCount = sortedTags[1] ? sortedTags[1][1] : 0;
-  const totalAnswers = answers.length;
+  const thirdCount = sortedTags[2] ? sortedTags[2][1] : 0;
 
-  // 선택 비율 계산
-  const primaryRatio = primaryCount / totalAnswers;
-  const secondaryRatio = secondaryCount / totalAnswers;
-  const dominanceRatio = primaryCount / (secondaryCount || 1);
-
-  // 10문제 기준으로 완화된 유형 결정 로직
-  if (dominanceRatio >= 2.0 && primaryRatio >= 0.3) {
-    // 단일 우세형: 한 영역에 집중 (기준 완화: 2.5→2.0, 0.4→0.3)
+  // 개선된 유형 결정 로직
+  // 1. 단일 우세형: 1위 태그가 4회 이상이거나, 1위가 3회이고 2위와 2회 이상 차이
+  if (primaryCount >= 4 || (primaryCount >= 3 && (primaryCount - secondaryCount) >= 2)) {
     return getSingleDominantType(primaryTag);
-  } else if (dominanceRatio >= 1.3 && primaryRatio >= 0.25 && secondaryRatio >= 0.15) {
-    // 이중 우세형: 두 영역이 비슷하게 강함 (기준 완화: 1.5→1.3, 0.3→0.25, 0.2→0.15)
-    return getDualDominantType(primaryTag, secondaryTag);
-  } else if (primaryRatio >= 0.2 && secondaryRatio >= 0.15) {
-    // 균형형: 여러 영역이 고르게 분포 (기준 완화: 0.25→0.2, 0.2→0.15)
-    return getBalancedType(primaryTag, secondaryTag);
-  } else if (primaryCount >= 3 && secondaryCount >= 2) {
-    // 추가 조건: 1위가 3회 이상, 2위가 2회 이상이면 이중 우세형
-    return getDualDominantType(primaryTag, secondaryTag);
-  } else if (primaryCount >= 4) {
-    // 추가 조건: 1위가 4회 이상이면 단일 우세형
-    return getSingleDominantType(primaryTag);
-  } else {
-    // 특수형: 특별한 패턴
-    return getSpecialType(answers, tagCounts);
   }
+  
+  // 2. 이중 우세형: 1위와 2위가 각각 3회 이상이거나, 1위가 3회이고 2위가 2회 이상
+  if ((primaryCount >= 3 && secondaryCount >= 3) || (primaryCount >= 3 && secondaryCount >= 2)) {
+    return getDualDominantType(primaryTag, secondaryTag);
+  }
+  
+  // 3. 삼중 우세형: 1위, 2위, 3위가 각각 2회 이상
+  if (primaryCount >= 2 && secondaryCount >= 2 && thirdCount >= 2) {
+    return getDualDominantType(primaryTag, secondaryTag); // 삼중 우세형도 이중 우세형으로 처리
+  }
+  
+  // 4. 균형형: 1위가 2회이고 나머지가 1회씩 고르게 분포
+  if (primaryCount === 2 && secondaryCount === 2) {
+    return getDualDominantType(primaryTag, secondaryTag);
+  }
+  
+  // 5. 올라운드: 모든 태그가 1회씩이거나 매우 고르게 분포
+  const uniqueTags = Object.keys(tagCounts).length;
+  if (uniqueTags >= 8 || (primaryCount === 1 && secondaryCount === 1)) {
+    return {
+      dna: '올라운드 마케팅 스트래티지스트',
+      colors: ['균형이 흐르는 오로라 그라데이션', '조화가 빛나는 프리즘 화이트']
+    };
+  }
+  
+  // 6. 기본값: 상위 2개 태그로 이중 우세형
+  return getDualDominantType(primaryTag, secondaryTag);
 };
 
 // 기술 추천 로직 (상위 태그별 대표 2개 영역만)
