@@ -418,7 +418,7 @@ const SalaryInput = () => {
                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 px-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                  >
                    <span className="text-lg">⏭️</span>
-                   <span>연봉 입력 건너뛰기</span>
+                   <span>건너뛰기</span>
                  </button>
                </div>
 
