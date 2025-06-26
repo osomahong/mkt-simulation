@@ -140,20 +140,17 @@ const ScenarioTypeSelector = () => {
             </div>
             
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light leading-tight mb-4 sm:mb-6">
-              <div className="bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 bg-clip-text text-transparent font-extralight tracking-wide">
-                Marketing
-              </div>
-              <div className="text-gray-800 font-medium">
-                Personal Color
-              </div>
-              <div className="text-lg sm:text-xl md:text-2xl text-gray-600 font-light mt-1 sm:mt-2">
+              <span className="bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 bg-clip-text text-transparent font-light tracking-wide text-2xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl font-montserrat">
+                Marketing Personal Color
+              </span>
+              <div className="text-lg sm:text-xl md:text-2xl text-gray-600 font-light mt-1 sm:mt-2 font-gowun">
                 Type Selection
               </div>
             </h1>
 
-            <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed font-light px-4 sm:px-0">
+            <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed font-light px-4 sm:px-0 font-gowun">
               당신의 전문 분야를 선택하고<br />
-              <span className="text-rose-500 font-medium">맞춤형 퍼스널컬러</span> 분석을 시작하세요
+              <span className="text-rose-500 font-medium font-gowun">맞춤형 퍼스널컬러</span> 분석을 시작하세요
             </p>
           </div>
         </div>

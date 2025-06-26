@@ -142,20 +142,17 @@ export default function Home() {
             </div>
             
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light leading-tight mb-4 sm:mb-6">
-              <div className="bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 bg-clip-text text-transparent font-extralight tracking-wide">
-                Marketing
-              </div>
-              <div className="text-gray-800 font-medium">
-                Personal Color
-              </div>
-              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-gray-600 font-light mt-1 sm:mt-2">
+              <span className="bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 bg-clip-text text-transparent font-light tracking-wide text-2xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl font-montserrat">
+                Marketing Personal Color
+              </span>
+              <div className="text-gray-600 font-light mt-0.5 sm:mt-1 text-base sm:text-lg md:text-base lg:text-base xl:text-lg">
                 Diagnosis
               </div>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-light px-4 sm:px-0">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-light px-4 sm:px-0 font-gowun">
               당신의 마케팅 성향에 어울리는<br />
-              <span className="text-rose-500 font-medium">퍼스널컬러</span>를 찾아보세요
+              <span className="text-rose-500 font-medium font-gowun">퍼스널컬러</span>를 찾아보세요
             </p>
           </div>
         </div>
@@ -172,7 +169,7 @@ export default function Home() {
                 
                 {/* 카드 헤더 */}
                 <div className="space-y-3 sm:space-y-4">
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-gray-800 px-2 text-center">
+                  <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-gray-800 px-2 text-center font-gowun">
                     나는 어떤 성향의<br />
                     마케팅을 하는 사람일까요?
                   </h2>
