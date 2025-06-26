@@ -324,35 +324,26 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
       ? `${baseUrl}&utm_source=kakao&utm_medium=share`
       : `${baseUrl}?utm_source=kakao&utm_medium=share`;
       
-    if (typeof window !== 'undefined' && window.Kakao) {
+    if (typeof window !== 'undefined' && (window as any).Kakao) {
       try {
         // 카카오 SDK 초기화 확인
-        if (!window.Kakao.isInitialized()) {
+        if (!(window as any).Kakao.isInitialized()) {
           console.log('카카오 SDK 초기화 중...');
           // 임시로 초기화 시도 (실제 앱 키가 필요함)
-          window.Kakao.init('f265d81144e358dad13c422075f42c62');
+          (window as any).Kakao.init('f265d81144e358dad13c422075f42c62');
         }
         
-        window.Kakao.Share.sendDefault({
+        (window as any).Kakao.Share.sendDefault({
           objectType: 'feed',
           content: {
-            title: `나의 마케팅 Personal Color: ${result.marketingDNA}`,
-            description: `${result.personalColors.join(', ')}`,
+            title: `🎨 ${marketerType} 마케터 Personal Color 결과`,
+            description: `${result.personalColors.join(', ')} | ${result.marketingDNA}`,
             imageUrl: `${window.location.origin}/og-images/result2.png`,
             link: {
               mobileWebUrl: shareUrl,
               webUrl: shareUrl,
             },
           },
-          buttons: [
-            {
-              title: '마케팅 퍼스널컬러 보기',
-              link: {
-                mobileWebUrl: shareUrl,
-                webUrl: shareUrl,
-              },
-            },
-          ],
         });
       } catch (error) {
         console.error('카카오 공유 오류:', error);
@@ -368,6 +359,16 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
         alert('카카오 공유를 사용할 수 없습니다. 대신 링크가 복사되었습니다!');
       });
     }
+  };
+
+  // 연봉 통계 버튼 클릭 핸들러
+  const handleSalaryStatsClick = () => {
+    if (!salaryInfo?.salary || !salaryInfo?.yearsOfExperience) {
+      alert('연봉 및 연차 정보를 입력해야 연봉 통계 결과를 볼 수 있습니다.\n\n초기 화면으로 돌아가서 연봉 정보를 입력해 주세요.');
+      router.push('/scenarios');
+      return;
+    }
+    router.push('/scenarios/salary-result');
   };
 
   // 레이더 차트용 데이터 변환
@@ -975,7 +976,7 @@ const ScenarioResult = ({ sharedResult }: ScenarioResultProps) => {
           )}
           {!searchParams?.get('rid') && (
             <button
-              onClick={() => router.push('/scenarios/salary-result')}
+              onClick={handleSalaryStatsClick}
               className="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-medium rounded-2xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-base"
             >
               💰 연봉 통계

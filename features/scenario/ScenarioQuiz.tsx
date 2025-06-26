@@ -360,6 +360,13 @@ const ScenarioQuiz = () => {
                 {highlightTermsBold(currentQuestion.question, termsInCurrent)}
               </h2>
               
+              {/* 성향 테스트 안내 */}
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 font-medium">
+                  💡 정답은 없습니다. 나의 성향에 가까운 방식을 선택해주세요
+                </p>
+              </div>
+              
               {/* 카테고리와 난이도 통합 태그 */}
               <div className="flex justify-center mb-4">
                 <div className={`inline-flex items-center gap-2 bg-gradient-to-r ${currentTheme.cardBg} text-gray-700 px-4 py-2 rounded-full text-sm font-medium border ${currentTheme.borderColor}/50`}>
@@ -400,7 +407,7 @@ const ScenarioQuiz = () => {
                   onMouseLeave={() => setHoveredChoice(null)}
                   disabled={isProcessing}
                   className={`
-                    w-full text-left p-4 md:p-6 rounded-2xl border-2 transition-all duration-500
+                    w-full text-center p-4 md:p-6 rounded-2xl border-2 transition-all duration-500
                     ${isProcessing 
                       ? selectedChoice === index
                         ? `bg-gradient-to-r ${currentTheme.gradient} border-transparent shadow-xl scale-[1.02]`
@@ -411,27 +418,10 @@ const ScenarioQuiz = () => {
                     }
                   `}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={`
-                      w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 transition-all duration-300
-                      ${isProcessing && selectedChoice === index
-                        ? 'bg-white/90 text-gray-800'
-                        : hoveredChoice === index 
-                          ? 'bg-rose-400 text-white shadow-lg' 
-                          : 'bg-gray-100 text-gray-600'
-                      }
-                    `}>
-                      {isProcessing && selectedChoice === index ? (
-                        <div className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
-                      ) : (
-                        String.fromCharCode(65 + index)
-                      )}
-                    </div>
-                    <div className="flex-1 flex flex-col justify-center">
-                      <p className="text-gray-900 font-medium text-sm sm:text-base leading-relaxed text-center">
-                        {highlightTermsBold(choice.text, termsInCurrent)}
-                      </p>
-                    </div>
+                  <div className="flex flex-col justify-center">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base leading-relaxed">
+                      {highlightTermsBold(choice.text, termsInCurrent)}
+                    </p>
                   </div>
                 </button>
               ))}
