@@ -51,6 +51,7 @@ const SalaryResult = () => {
 
   useEffect(() => {
     if (!salaryInfo?.salary) {
+      setLoading(false);
       return;
     }
 
