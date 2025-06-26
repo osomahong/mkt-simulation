@@ -356,7 +356,7 @@ const ScenarioQuiz = () => {
             {/* 질문 섹션 - 가운데 정렬 */}
             <div className="text-center mb-6">
               
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-4">
+              <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-gray-900 leading-tight mb-4">
                 {highlightTermsBold(currentQuestion.question, termsInCurrent)}
               </h2>
               

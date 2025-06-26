@@ -257,6 +257,30 @@ const SalaryResult = () => {
     }
   };
 
+  // 연봉 정보가 없는 경우 접근 제한
+  if (!salaryInfo?.salary || !salaryInfo?.yearsOfExperience) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 flex items-center justify-center p-4">
+        <div className="bg-white/90 backdrop-blur-xl border border-amber-200/60 rounded-2xl shadow-xl p-8 text-center max-w-md w-full">
+          <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center">
+            <div className="text-3xl">⚠️</div>
+          </div>
+          <h2 className="text-lg font-bold text-amber-900 mb-4">연봉 정보 필요</h2>
+          <p className="text-amber-700 mb-6 leading-relaxed">
+            연봉 및 연차 정보를 입력해야 연봉 통계 결과를 볼 수 있습니다.<br />
+            아래 버튼을 눌러 연봉 정보를 입력해 주세요.
+          </p>
+          <button
+            onClick={() => router.push('/scenarios')}
+            className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-amber-400/20 transition-all duration-300 hover:scale-105"
+          >
+            초기 화면으로 돌아가기
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50">
