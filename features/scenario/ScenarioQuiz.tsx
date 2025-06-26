@@ -249,7 +249,7 @@ const ScenarioQuiz = () => {
     );
     
     // 마지막 문제라면 결과페이지로 이동
-    if (currentQuestionIndex === questions.length - 1) {
+    if (currentQuestionIndex >= 9) { // 10개 질문 완료 (0부터 시작하므로 9)
       router.push('/scenarios/result');
     }
     
@@ -257,7 +257,7 @@ const ScenarioQuiz = () => {
     setSelectedChoice(null);
   };
 
-  const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+  const progressPercentage = ((currentQuestionIndex + 1) / 10) * 100; // 10개 질문으로 고정
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-rose-50 to-purple-50 relative overflow-hidden">
@@ -320,7 +320,7 @@ const ScenarioQuiz = () => {
               <div className="flex justify-between items-center mb-3">
                 <span className="text-sm text-gray-600 font-medium">진행률</span>
                 <span className="text-sm font-bold text-rose-600">
-                  {currentQuestionIndex + 1} / {questions.length}
+                  {currentQuestionIndex + 1} / 10
                 </span>
               </div>
               <div className="relative">
@@ -334,7 +334,7 @@ const ScenarioQuiz = () => {
                 </div>
                 <div className="flex justify-center mt-2">
                   <div className="flex gap-1">
-                    {questions.map((_, i) => (
+                    {[...Array(10)].map((_, i) => (
                       <div
                         key={i}
                         className={`w-2 h-2 rounded-full transition-all duration-300 ${
